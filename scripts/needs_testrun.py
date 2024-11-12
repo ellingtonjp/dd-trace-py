@@ -203,8 +203,8 @@ def _get_pr_number() -> int:
     ref_name = os.environ.get("CI_COMMIT_REF_NAME")
     if ref_name is not None:
         return int(github_api("/pulls", {"head": f"datadog:{ref_name}"})[0]["number"])
-
-    raise RuntimeError("Could not determine PR number")
+    return 0
+    # raise RuntimeError("Could not determine PR number")
 
 
 def for_each_testrun_needed(suites: t.List[str], action: t.Callable[[str], None], git_selections: t.List[str]):
