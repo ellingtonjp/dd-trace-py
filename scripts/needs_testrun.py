@@ -202,7 +202,11 @@ def _get_pr_number() -> int:
     # GitLab
     ref_name = os.environ.get("CI_COMMIT_REF_NAME")
     if ref_name is not None:
-        return int(github_api("/pulls", {"head": f"datadog:{ref_name}"})[0]["number"])
+        try:
+            return int(github_api("/pulls", {"head": f"datadog:{ref_name}"})[0]["number"])
+        except Exception:
+            LOGGER.warning("Could not determine PR number from CI_COMMIT_REF_NAME")
+            return 0
     return 0
     # raise RuntimeError("Could not determine PR number")
 
