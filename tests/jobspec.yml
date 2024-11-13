@@ -2,7 +2,7 @@ internal:
   runner: riot
   env:
     SUITE_NAME: internal
-  parallelism: 1
+  parallelism: 4
 tracer:
   runner: riot
   env:
