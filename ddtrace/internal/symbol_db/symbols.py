@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from dataclasses import field
 import dis
 from enum import Enum
+import gzip
 from http.client import HTTPResponse
 from inspect import CO_VARARGS
 from inspect import CO_VARKEYWORDS
@@ -484,9 +485,10 @@ class ScopeContext:
                 ),
                 FormData(
                     name="file",
-                    filename="symdb_export.json",
-                    data=json.dumps(self.to_json()),
+                    filename="symdb_export.gz",
+                    data=gzip.compress(json.dumps(self.to_json()).encode()),
                     content_type="json",
+                    content_encoding="gzip",
                 ),
             ]
         )
@@ -527,7 +529,7 @@ def is_module_included(module: ModuleType) -> bool:
 
 
 class SymbolDatabaseUploader(BaseModuleWatchdog):
-    __scope_limit__ = 100
+    __scope_limit__ = 400
 
     def __init__(self) -> None:
         super().__init__()

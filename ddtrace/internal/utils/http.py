@@ -418,8 +418,9 @@ def parse_form_multipart(body: str, headers: Optional[Dict] = None) -> Dict[str,
 class FormData:
     name: str
     filename: str
-    data: str
+    data: Union[str, bytes]
     content_type: str
+    content_encoding: Optional[str] = None
 
 
 def multipart(parts: List[FormData]) -> Tuple[bytes, dict]:
@@ -433,6 +434,8 @@ def multipart(parts: List[FormData]) -> Tuple[bytes, dict]:
     for part in parts:
         app = MIMEApplication(part.data, part.content_type, lambda _: _)
         app.add_header("Content-Disposition", "form-data", name=part.name, filename=part.filename)
+        if part.content_encoding:
+            app.add_header("Content-Encoding", part.content_encoding)
         del app["MIME-Version"]
         msg.attach(app)
 
