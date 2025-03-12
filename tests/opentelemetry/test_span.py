@@ -218,7 +218,7 @@ def test_otel_get_span_context(oteltracer):
     # opentelemetry.trace.NonRecordingSpan is used to represent a "remote span".
     assert span_context.is_remote is False
     # By default ddtrace set sampled=True for all spans
-    assert span_context.trace_flags == TraceFlags.SAMPLED
+    assert span_context.trace_flags == TraceFlags(TraceFlags.SAMPLED)
     # Default tracestate values set on all Datadog Spans
     assert span_context.trace_state.to_header() == "dd=p:{:016x};s:1;t.dm:-0".format(span_context.span_id)
 
@@ -241,7 +241,7 @@ def test_otel_get_span_context_with_default_trace_state(oteltracer):
         otelspan.set_attribute(MANUAL_DROP_KEY, "")
 
         span_context = otelspan.get_span_context()
-        assert span_context.trace_flags == TraceFlags.DEFAULT
+        assert span_context.trace_flags == TraceFlags(TraceFlags.DEFAULT)
 
 
 @pytest.mark.parametrize("trace_flags", [TraceFlags.SAMPLED, TraceFlags.DEFAULT])
