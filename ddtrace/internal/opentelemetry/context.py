@@ -80,7 +80,7 @@ class DDRuntimeContext:
             span = Span(ddactive)
             context = set_span_in_context(span, context)
         elif isinstance(ddactive, DDContext):
-            tf = TraceFlags.SAMPLED if ddactive._traceflags == "01" else TraceFlags.DEFAULT
+            tf = TraceFlags(TraceFlags.SAMPLED) if ddactive._traceflags == "01" else TraceFlags.get_default()
             ts = TraceState.from_header([ddactive._tracestate])
             span_context = OtelSpanContext(ddactive.trace_id or 0, ddactive.span_id or 0, True, tf, ts)
             span = OtelNonRecordingSpan(span_context)
